@@ -1,21 +1,24 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#007BFF">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📍</text></svg>">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>智能位置对应助手</title>
+    
+    <!-- PWA 移动端适配标签 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#007BFF">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📍</text></svg>">
+
     <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f4f6f8; }
         .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px; }
         h2 { text-align: center; color: #333; margin-top: 0; }
         label { font-weight: 600; display: block; margin-bottom: 8px; color: #444; }
-        textarea { width: 100%; height: 100px; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box; resize: vertical; }
+        textarea { width: 100%; height: 120px; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box; resize: vertical; background-color: #fafafa; }
         
         /* 折叠面板样式 */
         details { background: #f9f9f9; border: 1px solid #eee; border-radius: 8px; padding: 10px; margin-bottom: 15px; }
@@ -32,6 +35,7 @@
         #preview { max-width: 100%; margin-top: 15px; border-radius: 8px; display: none; border: 1px solid #eee; }
         .result-box { background-color: #e9ecef; padding: 15px; border-radius: 8px; min-height: 60px; font-size: 18px; line-height: 1.5; word-wrap: break-word; color: #333; }
         .status { text-align: center; color: #666; font-size: 14px; margin-top: 10px; }
+        .hint { font-size: 12px; color: #888; margin-top: 5px; }
     </style>
 </head>
 <body>
@@ -43,75 +47,16 @@
     <details>
         <summary>⚙️ 设置位置对照表 (点击展开)</summary>
         <label>在此修改数字对应的含义：</label>
-        <textarea id="mapInput">019830一排一架一层A面
-010280一排一架二层A面
-003610一排一架二层A面
-700080一排一架三层A面
-034010一排一架三层A面
-040100一排一架三层A面
-000650一排二架一层A面
-025150一排二架二层A面
-028360一排二架二层A面
-000057一排二架二层A面
-007320一排一架一层B面
-030160一排一架二层B面
-022810一排一架二层B面
-020660一排一架三层B面
-023660一排一架三层B面
-013700一排二架一层B面
-006530一排二架一层B面
-022800一排二架二层B面
-019820一排二架二层B面
-022770一排二架三层B面
-022780一排二架三层B面
-000920一排三架一层B面
-000900一排三架一层B面
-016480一排三架一层B面
-001620一排三架一层B面
-001610一排三架一层B面
-028110一排三架二层B面
-030470一排三架二层B面
-030250一排三架二层B面
-030360一排三架二层B面
-030290一排三架二层B面
-030340一排三架二层B面
-030350一排三架二层B面
-028180一排三架三层B面
-039780一排三架三层B面
-039800一排三架三层B面
-039810一排三架三层B面
-039790一排三架三层B面
-039820一排三架三层B面
-039840一排三架三层B面
-039860一排三架三层B面
-039850一排三架三层B面
-034030一排三架三层B面
-034040一排三架三层B面
-030370一排三架三层B面
-030380一排三架三层B面
-030310一排三架三层B面
-030280一排三架三层B面
-033920一排三架四层B面
-028630一排三架四层B面
-007520一排三架四层B面
-030390一排三架四层B面
-040640一排三架四层B面
-020820一排三架四层B面
-039750一排三架四层B面
-034050一排三架四层B面
-036030一排三架四层B面
-034020一排三架五层B面
-000059一排三架五层B面
-000049一排三架五层B面
-008530一排三架五层B面
-000071一排三架五层B面
-000054一排三架五层B面
-000079一排三架五层B面
-000228B面
-000071B面
-000065一排三架六层B面
-000054B面
-000079B面</textarea>
+        <textarea id="mapInput">1金
+2木
+3水
+4火
+5土
+6风
+7雨
+8雷
+9点</textarea>
+        <div class="hint">💡 格式：数字+名称，每行一个。改完直接点“执行对应”生效。</div>
     </details>
 
     <label>1. 获取清单号 (二选一)</label>
@@ -168,6 +113,7 @@
 
         } catch (error) {
             document.getElementById('statusText').innerText = "识别失败，请重试。";
+            console.error(error);
         }
     }
 
@@ -211,6 +157,8 @@
         const text = document.getElementById('output').innerText;
         navigator.clipboard.writeText(text).then(() => {
             alert("结果已复制！");
+        }).catch(err => {
+            alert("复制失败，请手动长按复制。");
         });
     }
 </script>
